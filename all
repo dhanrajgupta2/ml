@@ -1,0 +1,114 @@
+# exp 1 :
+# predict the price of uber ride from given pickup point to the agreed drop off location perform following 
+
+# (i) pre processing of data sets
+# (ii) identify the outliers
+# (iii) Check the correlation
+# (iv) implement linear regression and random forest model
+# (v) evaluate the models and compare there respectives scores R2 and RMSE ( root mean square error ) 
+
+
+# solution
+
+
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.metrics import r2_score, mean_squared_error
+
+# Load dataset
+df = pd.read_csv('/home/student/uber.csv')
+df
+
+<=======================================================================================================================>
+
+# STEP (i) — Preprocessing
+missing_values = df.isnull().sum() # missing values
+missing_values
+
+statistics = df.describe() # statistics
+statistics
+
+data_types = df.dtypes # data_types
+data_types
+
+dimensions = df.shape # dimensions
+dimensions
+
+<=======================================================================================================================>
+
+# (ii) identify the outliers
+# Detecting outliers using the IQR method
+Q1 = df[['fare_amount', 'pickup_longitude', 'pickup_latitude','dropoff_longitude', 'dropoff_latitude', 'passenger_count']].quantile(0.25)
+Q3 = df[['fare_amount', 'pickup_longitude', 'pickup_latitude','dropoff_longitude', 'dropoff_latitude', 'passenger_count']].quantile(0.75)
+IQR = Q3 - Q1
+lower_bound = Q1 - 1.5 * IQR
+upper_bound = Q3 + 1.5 * IQR
+
+lower_bound
+IQR
+upper_bound
+
+
+<=======================================================================================================================>
+
+# (iii) Check the correlation
+
+numeric_df = df.select_dtypes(include='number')
+
+plt.figure(figsize=(12, 6))
+sns.heatmap(numeric_df.corr(), annot=True, cmap='coolwarm')
+plt.title("Feature Correlation Heatmap")
+plt.show()
+
+<=======================================================================================================================>
+
+# (iv) implement linear regression and random forest model
+
+X = df.drop(columns=['key' ,'fare_amount' ,'pickup_datetime' ,'pickup_longitude' ,'pickup_latitude' ,'dropoff_longitude','dropoff_latitude'])
+y = df['passenger_count']
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Create and train the Linear Regression model
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+# Make predictions on the test set
+y_pred = model.predict(X_test)
+y_pred
+
+# Create and train the Linear Regression model
+model = RandomForestRegressor()
+model.fit(X_train, y_train)
+
+# Make predictions on the test set
+y_pred = model.predict(X_test)
+y_pred
+
+<=======================================================================================================================>
+
+# STEP (v) — Evaluation
+def evaluate_model(y_true, y_pred, name):
+    r2 = r2_score(y_true, y_pred)
+    rmse = np.sqrt(mean_squared_error(y_true, y_pred))
+    print(f"{name} R² Score: {r2:.4f}")
+    print(f"{name} RMSE: {rmse:.4f}\n")
+
+evaluate_model(y_test, y_pred, "Linear Regression")
+evaluate_model(y_test, y_pred, "Random Forest")
+
+or 
+
+# alternative of evaluation
+
+print("Linear →", r2_score(y_test, y_pred), np.sqrt(mean_squared_error(y_test, y_pred)))
+print("Random →", r2_score(y_test, y_pred), np.sqrt(mean_squared_error(y_test, y_pred)))
+
+<============================================================================================================================================================================================================================================================================================================>
+
