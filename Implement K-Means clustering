@@ -1,0 +1,60 @@
+# Exp 6 : Implement K-Means clustering/ hierarchical clustering on sales_data_sample.csv dataset.
+# Determine the number of clusters using the elbow method.
+
+# solution
+
+
+import pandas as pd
+import numpy as np
+import seaborn as sns
+import matplotlib.pyplot as plt
+from sklearn.preprocessing import StandardScaler
+from sklearn.cluster import KMeans
+
+
+df = pd.read_csv("/home/student/Downloads/sales_data_sample.csv" , encoding = 'latin1')
+df
+
+
+df.head()
+
+df_cluster = df[['SALES', 'QUANTITYORDERED']].dropna()
+df_cluster
+
+
+# Elbow Method (To Find Optimal k)
+
+scaler = StandardScaler()
+scaled_data = scaler.fit_transform(df_cluster)
+scaled_data
+
+wcss = []
+for k in range(1, 11):
+    kmeans = KMeans(n_clusters=k, random_state=42)
+    kmeans.fit(scaled_data)
+    wcss.append(kmeans.inertia_)
+
+# Plot
+plt.plot(range(1, 11), wcss, 'bo-')
+plt.xlabel('Number of Clusters (k)')
+plt.ylabel('WCSS')
+plt.title('Elbow Method for Optimal k')
+plt.grid(True)
+plt.show()
+
+
+# Fit KMeans with Best k (From Elbow)
+
+kmeans = KMeans(n_clusters=3, random_state=42)
+df_cluster['Cluster'] = kmeans.fit_predict(scaled_data)
+
+
+df_cluster['Cluster']
+
+plt.scatter(df_cluster['SALES'], df_cluster['QUANTITYORDERED'],
+            c=df_cluster['Cluster'], cmap='rainbow')
+plt.xlabel('SALES')
+plt.ylabel('QUANTITYORDERED')
+plt.title('K-Means Clustering')
+plt.grid(True)
+plt.show()
