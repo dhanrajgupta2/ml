@@ -1,0 +1,92 @@
+# Given a bank customer, build a neural network-based classifier that can determine whether they
+# will leave or not in the next 6 months.
+# Perform following
+
+# steps: 1. Read the dataset. 
+# 2. Distinguish the feature and target set and divide the data set into training and test sets. 
+# 3. Normalize the train and test data. 
+# 4. Initialize and build the model.Identify the points of improvement and implement the same. 
+# 5. Print the accuracy score and confusion matrix (5 points).
+
+# solution
+
+import pandas as pd
+import numpy as np
+
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense
+from sklearn.metrics import accuracy_score, confusion_matrix
+
+<======================================================================================================>
+# step 1 Read the dataset
+
+df = pd.read_csv("/home/student/Churn_Modelling.csv")
+df
+
+<=====================================================================================================>
+
+# step 2 Split features and target and train test split 
+
+X = df.drop(columns=["Exited", "RowNumber", "CustomerId", "Surname"])      
+y = df["Exited"]
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+<=====================================================================================================>
+
+# step 3 Normalize data
+
+scaler = StandardScaler()
+X_train = scaler.fit_transform(X_train)
+X_test = scaler.transform(X_test)
+
+<=====================================================================================================>
+
+# step 4 build the neural network 
+
+model = Sequential()
+model.add(Dense(16, input_dim=X_train.shape[1], activation='relu'))
+model.add(Dense(8, activation='relu'))
+model.add(Dense(1, activation='sigmoid'))
+
+model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
+model.fit(X_train, y_train, epochs=20, batch_size=32, verbose=0)
+
+<=====================================================================================================>
+
+# step 5 accuracy score and confusion matrix
+
+
+# Convert probabilities → 0/1 labels
+y_pred = model.predict(X_test) > 0.5  
+
+# Evaluate
+conf_matrix = confusion_matrix(y_test, y_pred)
+accuracy = accuracy_score(y_test, y_pred)
+
+print("Confusion Matrix:")
+print(conf_matrix)
+
+print("\nAccuracy:")
+print(f"{accuracy:.4f}")
+
+
+<=====================================================================================================>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
