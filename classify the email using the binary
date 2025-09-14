@@ -11,7 +11,6 @@
 
 import pandas as pd
 from sklearn.model_selection import train_test_split
-from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.svm import SVC
 from sklearn.metrics import classification_report
@@ -21,23 +20,25 @@ df = pd.read_csv("/home/student/emails.csv")   # adjust path if needed
 df
 
 # 2. Features & labels
-X = df['text']      # email text column
-y = df['label']     # 0 = Not Spam, 1 = Spam
+X = df.drop(columns=['Email No.', 'Prediction'])  # drop ID + target
+y = df['Prediction']   # target column
 
-# 3. Preprocess text
-X = TfidfVectorizer().fit_transform(X)
+# Convert features to NumPy (important for KNN)
+X = X.values
+y = y.values
 
-# 4. Split data
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3)
 
-# 5. Train models
+# 3. Split data
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
+
+# 4. Train models
 knn = KNeighborsClassifier().fit(X_train, y_train)
 svm = SVC().fit(X_train, y_train)
 
-# 6. Evaluate
+
+# 5. Evaluate
 print("KNN:\n", classification_report(y_test, knn.predict(X_test)))
 print("SVM:\n", classification_report(y_test, svm.predict(X_test)))
-
 
 
 
