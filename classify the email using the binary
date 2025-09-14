@@ -1,0 +1,57 @@
+# Classify the email using the binary classification method. 
+# Email Spam detection has two states: 
+# a) Normal State – Not Spam, 
+# b) Abnormal State – Spam. 
+# Use K-Nearest Neighbors and Support
+# Vector Machine for classification. Analyze their performance.
+
+
+# solution 
+
+
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.svm import SVC
+from sklearn.metrics import classification_report
+
+# 1. Load dataset
+df = pd.read_csv("/home/student/emails.csv")   # adjust path if needed
+df
+
+# 2. Features & labels
+X = df['text']      # email text column
+y = df['label']     # 0 = Not Spam, 1 = Spam
+
+# 3. Preprocess text
+X = TfidfVectorizer().fit_transform(X)
+
+# 4. Split data
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3)
+
+# 5. Train models
+knn = KNeighborsClassifier().fit(X_train, y_train)
+svm = SVC().fit(X_train, y_train)
+
+# 6. Evaluate
+print("KNN:\n", classification_report(y_test, knn.predict(X_test)))
+print("SVM:\n", classification_report(y_test, svm.predict(X_test)))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
