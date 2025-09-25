@@ -40,7 +40,25 @@ svm = SVC().fit(X_train, y_train)
 print("KNN:\n", classification_report(y_test, knn.predict(X_test)))
 print("SVM:\n", classification_report(y_test, svm.predict(X_test)))
 
+# or
 
+# print("KNN Accuracy:", knn.score(X_test, y_test))
+# print("SVM Accuracy:", svm.score(X_test, y_test))
+
+# else 
+
+
+# conf_matrix = confusion_matrix(y_test, y_pred)
+# accuracy = accuracy_score(y_test, y_pred)
+# precision = precision_score(y_test, y_pred)
+# recall = recall_score(y_test, y_pred)
+# error_rate = 1 - accuracy
+
+# conf_matrix
+# accuracy
+# precision
+# recall
+# error_rate
 
 
 
