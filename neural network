@@ -10,6 +10,14 @@
 
 # solution
 
+import pandas as pd
+import numpy as np
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler, OneHotEncoder
+from sklearn.compose import ColumnTransformer
+from sklearn.metrics import accuracy_score, confusion_matrix
+from keras.models import Sequential
+from keras.layers import Dense, Input
 
 # step 1 Read the dataset
 
