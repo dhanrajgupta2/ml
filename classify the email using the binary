@@ -42,7 +42,7 @@ print("SVM:\n", classification_report(y_test, svm.predict(X_test)))
 
 # or
 
-# print("KNN Accuracy:", knn.score(X_test, y_test))
+# print("KNN Accuracy:", knn.score(X_test, y_test))   # we dont need to write from sklearn.metrics import classification_report
 # print("SVM Accuracy:", svm.score(X_test, y_test))
 
 # else 
